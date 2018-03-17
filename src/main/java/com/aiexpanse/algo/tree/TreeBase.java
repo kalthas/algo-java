@@ -48,7 +48,11 @@ public abstract class TreeBase<T> extends UIAware {
             Node<T> left = create(initial);
             return create(gen.next(initial), left);
         }
-        int leftHalf = leftMax(n), rightHalf = n-leftHalf-1;
+        /*
+         * allocate as many nodes as possible to left sub tree
+         */
+        int leftHalf = leftMax(n),
+                rightHalf = n-leftHalf-1;
         Node<T> leftRoot = createPostOrderSeq(leftHalf, initial, gen);
         Node<T> rightRoot = createPostOrderSeq(rightHalf, gen.next(leftRoot.value), gen);
         return create(gen.next(rightRoot.value), leftRoot, rightRoot);
@@ -68,13 +72,7 @@ public abstract class TreeBase<T> extends UIAware {
      */
     private static int leftMax(int n) {
         int subDepth = (int) Math.floor(log2(n)-1);
-        if (n == 10) {
-            System.out.println("subDepth="+subDepth);
-        }
         int maxSubDepth = (int)Math.pow(2, subDepth + 1)-1;
-        if (n == 10) {
-            System.out.println("maxSubDepth="+maxSubDepth);
-        }
         int maxSubDepthM1 = (int)Math.pow(2, subDepth)-1;
         if ((n - 1 - maxSubDepth) < maxSubDepthM1) {
             return n - 1 - maxSubDepthM1;

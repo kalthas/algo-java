@@ -1,4 +1,4 @@
-# A library facilitate learning algorithm
+# A library facilitates learning algorithm
 
 ## Getting Started
 
@@ -18,7 +18,7 @@ com.aiexpanse.algo.tree.traversal.PostOrderTraversal
 
 ## Visualization
 An easy to use visualization approach is created in this library. Run any example with visualization
-support will start an embedded jetty server which serves at port 808.
+support will start an embedded jetty server which serves at port 8080.
 
 ```java
 package com.aiexpanse.algo.tree.traversal;
