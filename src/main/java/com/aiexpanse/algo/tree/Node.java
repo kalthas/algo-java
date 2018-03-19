@@ -18,6 +18,12 @@ public class Node<T> {
         this.value = value;
     }
 
+    public Node(T value, Node<T> left, Node<T> right) {
+        this(value);
+        this.left = left;
+        this.right = right;
+    }
+
     public String getName() {
         return value.toString();
     }

@@ -66,6 +66,14 @@ public abstract class TreeBase<T> extends UIAware {
         }
     }
 
+    public void inOrderTraverse(Node<T> node, NodeVisitor<T> visitor) {
+        if (node != null) {
+            inOrderTraverse(node.left, visitor);
+            visitor.visit(node);
+            inOrderTraverse(node.right, visitor);
+        }
+    }
+
     /*
      * The upper bound of number of nodes that can be allocated to left sub tree given total
      * node number n
