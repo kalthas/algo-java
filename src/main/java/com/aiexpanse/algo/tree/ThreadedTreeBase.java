@@ -4,50 +4,50 @@ import com.aiexpanse.algo.jetty.UIAware;
 
 import java.util.stream.IntStream;
 
-public abstract class TreeBase<T> extends UIAware {
+public abstract class ThreadedTreeBase<T> extends UIAware {
 
-    protected void serve(Node<T> tree) {
+    protected void serve(ThreadedNode<T> tree) {
         super.serve("/tree", tree);
     }
 
-    public interface NodeValueGenerator<T> {
+    public interface ThreadedNodeValueGenerator<T> {
         T next(T current);
     }
 
-    public interface NodeVisitor<T> {
-        void visit(Node<T> node);
+    public interface ThreadedNodeVisitor<T> {
+        void visit(ThreadedNode<T> node);
     }
 
-    protected static NodeValueGenerator<Integer> IntGen = (current) -> ++current;
-    protected static NodeVisitor<Integer> IntPrint = TreeBase::print;
+    protected static ThreadedNodeValueGenerator<Integer> IntGen = (current) -> ++current;
+    protected static ThreadedNodeVisitor<Integer> IntPrint = ThreadedTreeBase::print;
 
-    public static void print(Node node) {
+    public static void print(ThreadedNode node) {
         System.out.println(node);
     }
 
-    public Node<T> create(T value) {
-        return new Node<>(value);
+    public ThreadedNode<T> create(T value) {
+        return new ThreadedNode<>(value);
     }
 
-    public Node<T> create(T value, Node<T> left) {
-        Node<T> node = create(value);
+    public ThreadedNode<T> create(T value, ThreadedNode<T> left) {
+        ThreadedNode<T> node = create(value);
         node.left = left;
         return node;
     }
 
-    public Node<T> create(T value, Node<T> left, Node<T> right) {
-        Node<T> node = create(value, left);
+    public ThreadedNode<T> create(T value, ThreadedNode<T> left, ThreadedNode<T> right) {
+        ThreadedNode<T> node = create(value, left);
         node.right = right;
         return node;
     }
 
-    public Node<T> createPostOrderSeq(int n, T initial, NodeValueGenerator<T> gen) {
+    public ThreadedNode<T> createPostOrderSeq(int n, T initial, ThreadedNodeValueGenerator<T> gen) {
         if (n == 0) {
             return null;
         } else if (n == 1) {
             return create(initial);
         } else if (n == 2) {
-            Node<T> left = create(initial);
+            ThreadedNode<T> left = create(initial);
             return create(gen.next(initial), left);
         }
         /*
@@ -55,33 +55,33 @@ public abstract class TreeBase<T> extends UIAware {
          */
         int leftHalf = leftMax(n),
                 rightHalf = n-leftHalf-1;
-        Node<T> leftRoot = createPostOrderSeq(leftHalf, initial, gen);
-        Node<T> rightRoot = createPostOrderSeq(rightHalf, gen.next(leftRoot.value), gen);
+        ThreadedNode<T> leftRoot = createPostOrderSeq(leftHalf, initial, gen);
+        ThreadedNode<T> rightRoot = createPostOrderSeq(rightHalf, gen.next(leftRoot.value), gen);
         return create(gen.next(rightRoot.value), leftRoot, rightRoot);
     }
 
-    public Node<T> createInOrderSeq(int n, T initial, NodeValueGenerator<T> gen) {
+    public ThreadedNode<T> createInOrderSeq(int n, T initial, ThreadedNodeValueGenerator<T> gen) {
         T[] valueArray = (T[])new Object[n];
         valueArray[0] = initial;
         IntStream.range(1, n).forEach(i -> valueArray[i] = gen.next(valueArray[i-1]));
         return toInOrder(valueArray, 0, n-1);
     }
 
-    private Node<T> toInOrder(T[] values, int left, int right) {
+    private ThreadedNode<T> toInOrder(T[] values, int left, int right) {
         if (left > right) {
             return null;
         }
         if (left == right) {
-            return new Node<>(values[left]);
+            return new ThreadedNode<>(values[left]);
         } else {
             int mid = left + (right-left)/2;
-            Node<T> leftRoot = toInOrder(values, left, mid - 1);
-            Node<T> rightRoot = toInOrder(values, mid + 1, right);
-            return new Node<>(values[mid], leftRoot, rightRoot);
+            ThreadedNode<T> leftRoot = toInOrder(values, left, mid - 1);
+            ThreadedNode<T> rightRoot = toInOrder(values, mid + 1, right);
+            return new ThreadedNode<>(values[mid], leftRoot, rightRoot);
         }
     }
 
-    public void postOrderTraverse(Node<T> node, NodeVisitor<T> visitor) {
+    public void postOrderTraverse(ThreadedNode<T> node, ThreadedNodeVisitor<T> visitor) {
         if (node != null) {
             postOrderTraverse(node.left, visitor);
             postOrderTraverse(node.right, visitor);
@@ -89,7 +89,7 @@ public abstract class TreeBase<T> extends UIAware {
         }
     }
 
-    public void inOrderTraverse(Node<T> node, NodeVisitor<T> visitor) {
+    public void inOrderTraverse(ThreadedNode<T> node, ThreadedNodeVisitor<T> visitor) {
         if (node != null) {
             inOrderTraverse(node.left, visitor);
             visitor.visit(node);

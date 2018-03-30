@@ -1,4 +1,4 @@
-package com.aiexpanse.algo.tree.traversal;
+package com.aiexpanse.algo.tree.construction;
 
 import com.aiexpanse.algo.tree.Node;
 import com.aiexpanse.algo.tree.TreeBase;
@@ -13,6 +13,14 @@ public class OrderedListToBST extends TreeBase<Integer> {
     }
 
     private void run() {
+        Integer i = 5;
+        synchronized (i) {
+            try {
+                i.wait();
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
+        }
         int[] ints = IntStream.rangeClosed(1, 20).toArray();
         Node<Integer> node = toBST(ints, 0, ints.length - 1);
         inOrderTraverse(node, IntPrint);

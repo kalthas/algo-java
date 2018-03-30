@@ -10,6 +10,13 @@ This library is maven based, so to initialize
 mvn install
 ```
 
+then
+```
+cd fe
+npm install
+npm build
+```
+
 And run one of the examples, say
 
 ```
